@@ -14,10 +14,16 @@ class ObjectTrackerController(object):
         list of all maya attributes.
     """
 
-    def __init__(self, driver_list_manager, driven_list_manager, attrs):
+    def __init__(self):
+        self.driver_list_manager = None
+        self.driven_list_manager = None
+        self.attrs = None
+
+    def set_object_tracker_dependences(self, driver_list_manager, driven_list_manager, attrs):
         self.driver_list_manager = driver_list_manager
         self.driven_list_manager = driven_list_manager
         self.attrs = attrs
+
 
     # Command for setting the keys for
     # driver and driven
@@ -54,3 +60,11 @@ class ObjectTrackerController(object):
                 print 'full driven attr: {attr}'.format(attr=full_driven_attr)
                 print '************************'
                 cmds.setDrivenKeyframe(full_driven_attr, currentDriver=full_driver_attr)
+
+
+    def save_config_cmd(self):
+        print "Saving Config to Disk..."
+
+
+    def load_config_cmd(self):
+        print "Loading Config from Disk..."

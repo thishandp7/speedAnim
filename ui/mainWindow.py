@@ -1,7 +1,9 @@
 import maya.cmds as cmds
-import listManager as lm
 import controller.objectTrackerController as otc
+import buttonManager as bm
+import listManager as lm
 
+reload(bm)
 reload(lm)
 reload(otc)
 
@@ -18,6 +20,7 @@ class SpeedAnim(object):
         # TODO: add all attributes
         self.attrs = ['scaleX', 'scaleY', 'scaleZ', 'translateZ']
         self.number_of_column = 2
+        self.ot_controller = otc.ObjectTrackerController()
         self.size = (500, 600)
         self.title = 'Speed Anim'
         self.window = 'speedAnimUI'
@@ -33,10 +36,29 @@ class SpeedAnim(object):
         cmds.text(self.title)
         cmds.separator(height=20)
 
-        #create an Object Tracker frame
+        # Create an Object Tracker frame
         self.build_object_tracker_frame()
 
+        # Create Save Config button
+        self.build_save_config_button()
+
+        # Create Load Config button
+        self.build_load_config_button()
+
         cmds.showWindow(self.window)
+
+
+    def build_save_config_button(self):
+        self.save_config_button = bm.ButtonManager(
+            'Save Config',
+            self.ot_controller.save_config_cmd
+        )
+
+    def build_load_config_button(self):
+        self.save_config_button = bm.ButtonManager(
+            'Load Config',
+            self.ot_controller.load_config_cmd
+        )
 
     # Create Object Tracker frame
     def build_object_tracker_frame(self):
@@ -56,20 +78,21 @@ class SpeedAnim(object):
         driver_list_manager = lm.ListManager('Drivers', my_parent=rcl, is_driver=True)
         driven_list_manager = lm.ListManager('Driven', my_parent=rcl)
 
-        otc_functions = otc.ObjectTrackerController(
+        self.ot_controller.set_object_tracker_dependences(
             driver_list_manager,
             driven_list_manager,
             self.attrs
         )
 
         #create set driven key button
-        self.set_driven_key_button_cmd(otc_functions)
+        self.set_driven_key_button_cmd()
 
     # Create Set Driven Key button
-    def set_driven_key_button_cmd(self, otc_functions):
+    def set_driven_key_button_cmd(self):
+        # TODO: use ButtonManager class
         cmds.button(
             label='Set Key',
-            command=lambda x: otc_functions.set_key_cmd()
+            command=lambda x: self.ot_controller.set_key_cmd()
         )
 
     # Collapse ui frame command

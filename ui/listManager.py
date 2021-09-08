@@ -1,4 +1,7 @@
 import maya.cmds as cmds
+import buttonManager as bm
+
+reload(bm)
 
 class ListManager(object):
     """
@@ -50,17 +53,22 @@ class ListManager(object):
             parent=self.list_manager_layout
         )
 
-        # Create the button only if it's specified to creaty by list_only boolean
+        # Create the button only if it's specified to
+        # create by list_only boolean
         if not list_only:
-            self.add_button = cmds.button(
-                label='Add {buttonName}'.format(buttonName=self.list_name),
-                command=lambda x: self.add_selected_objects_to_list()
+
+            # Create add button to add the selected
+            # items in the scene to the list
+            self.add_button = bm.ButtonManager(
+                'Add {listName}'.format(listName=self.list_name),
+                self.add_selected_objects_to_list
             )
 
-            self.get_items_button = cmds.button(
-                label='Get {buttonName}'.format(buttonName=self.list_name),
-                command=lambda x: self.get_selected_list_item()
-            )
+            # TODO: remove get_items_button
+            # Create get items button to get the
+            # items in the list as a List
+            self.get_items_button = bm.ButtonManager('Get List Items', self.get_selected_list_item)
+
 
     # Add all selected objects from the scene
     # to the list
